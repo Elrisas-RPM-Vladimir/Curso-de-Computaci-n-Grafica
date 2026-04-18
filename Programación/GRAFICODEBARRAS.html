@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Barras</title>
+    <h2>Gráfico de Barras</h2>
+    <h2>Creado por: Vladimir Alexandre Ortiz Chaccara</h2>
+    
+    <div class="chart-area">
+        <div class="bar red" style="height: 50%;">
+            <span class="label">50%</span>
+        </div>
+
+        <div class="bar blue" style="height: 60%;">
+            <span class="label">60%</span>
+        </div>
+
+        <div class="bar green" style="height: 70%;">
+            <span class="label">70%</span>
+        </div>
+
+        <div class="bar orange" style="height: 90%;">
+            <span class="label">90%</span>
+        </div>
+
+        <div class="bar purple" style="height: 100%;">
+            <span class="label">100%</span>
+        </div>
+    </div>
+    
+</head>
+<body>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border: 2px solid #000;
+            width: 400px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Contenedor del gráfico */
+        .chart-area {
+            border: 2px solid #000;
+            height: 350px;
+            display: flex;
+            align-items: flex-end; /* Alinea las barras al fondo */
+            justify-content: space-around;
+            padding: 0 10px;
+            position: relative;
+        }
+
+        /* Estilo general de las barras */
+        .bar {
+            width: 50px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            transition: opacity 0.3s;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        /* Etiquetas de porcentaje */
+        .label {
+            position: absolute;
+            top: -25px;
+            color: #d32f2f; /* Color rojo similar a la imagen */
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Colores específicos */
+        .red    { background-color: #ff0000; border: 1px solid #000; }
+        .blue   { background-color: #0000ff; border: 1px solid #000; }
+        .green  { background-color: #008000; border: 1px solid #000; }
+        .orange { background-color: #ffa500; border: 1px solid #000; }
+        .purple { background-color: #800080; border: 1px solid #000; }
+
+    </style>
+</body>
+</html>

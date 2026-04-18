@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de una función</title>
+    <h2>Creado por: Vladimir Alexandre Ortiz Chaccara</h2>
+</head>
+<body>
+    <h2>Gráfico de una función</h2>
+    <canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;"></canvas> 
+    
+<!-- CÓDIGO JAVASCRIPT -->
+    
+    <script>
+        var canvas = document.getElementById('myCanvas');
+        var ctx = canvas.getContext('2d');
+
+        // Dibujar los ejes
+        ctx.beginPath();
+        ctx.moveTo(0, 250); // Eje X
+        ctx.lineTo(500, 250);
+        ctx.moveTo(250, 0); // Eje Y
+        ctx.lineTo(250, 500);
+        ctx.stroke();
+
+        // Función a gráficar: y = x^2/100
+        ctx.beginPath();
+        ctx.moveTo(0, 250); // iniciar con el eje X
+        
+        for (var x = -250; x <= 250; x++) {
+            var y = Math.pow(x, 2)/ 100; // función para que se ajuste el canvas
+            ctx.lineTo(250 + x, 250 - y); // ajusta la posición para centrar en el canvas
+        }
+        ctx.strokeStyle = 'blue'; // color de la función
+        ctx.stroke();
+    </script>
+</body>
+</html>
