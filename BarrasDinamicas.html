@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gráfico de Barras Dinámico</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #f4f4f4; }
+        .chart-area {
+            border: 2px solid #000; height: 300px; width: 400px;
+            display: flex; align-items: flex-end; justify-content: space-around;
+            padding: 10px; background: white;
+        }
+        .bar {
+            width: 50px; background-color: #3498db; border: 1px solid #2980b9;
+            position: relative; transition: height 0.5s ease-in-out;
+        }
+        .label { position: absolute; top: -25px; width: 100%; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Gráfico de Barras Dinámico</h2>
+    <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
+    <div class="chart-area" id="chart">
+        <div class="bar"><span class="label">0%</span></div>
+        <div class="bar"><span class="label">0%</span></div>
+        <div class="bar"><span class="label">0%</span></div>
+        <div class="bar"><span class="label">0%</span></div>
+        <div class="bar"><span class="label">0%</span></div>
+    </div>
+
+    <script>
+        const bars = document.querySelectorAll('.bar');
+        const labels = document.querySelectorAll('.label');
+
+        function updateBars() {
+            bars.forEach((bar, index) => {
+                const randomValue = Math.floor(Math.random() * 91) + 10; // Entre 10 y 100
+                bar.style.height = randomValue + "%";
+                labels[index].innerText = randomValue + "%";
+                // Cambiar color aleatoriamente para mayor dinamismo
+                bar.style.backgroundColor = `hsl(${randomValue * 2}, 70%, 50%)`;
+            });
+        }
+
+        setInterval(updateBars, 1000);
+        updateBars(); // Llamada inicial
+    </script>
+</body>
+</html>

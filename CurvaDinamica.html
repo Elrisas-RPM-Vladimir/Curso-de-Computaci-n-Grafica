@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Curva Coseno Dinámica</title>
+</head>
+<body style="text-align: center; font-family: sans-serif;">
+    <h2>Curva Dinámica de la Función Coseno</h2>
+    <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
+    <canvas id="cosCanvas" width="500" height="500" style="border:1px solid #000; background: #fafafa;"></canvas>
+
+    <script>
+        const canvas = document.getElementById('cosCanvas');
+        const ctx = canvas.getContext('2d');
+        let time = 0;
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar ejes
+            ctx.strokeStyle = '#ccc';
+            ctx.beginPath();
+            ctx.moveTo(0, 250); ctx.lineTo(500, 250); // Eje X
+            ctx.moveTo(250, 0); ctx.lineTo(250, 500); // Eje Y
+            ctx.stroke();
+
+            // Dibujar Función Coseno
+            ctx.beginPath();
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 3;
+
+            for (let x = 0; x <= 500; x++) {
+                // Función: y = cos(x * frecuencia + tiempo) * amplitud
+                let y = Math.cos((x - 250) * 0.05 + time) * 100;
+                let canvasY = 250 - y;
+
+                if (x === 0) ctx.moveTo(x, canvasY);
+                else ctx.lineTo(x, canvasY);
+            }
+            ctx.stroke();
+
+            time += 0.1; // Incremento de velocidad
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+</html>

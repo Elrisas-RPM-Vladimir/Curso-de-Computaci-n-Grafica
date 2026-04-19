@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Puntos en Movimiento</title>
+</head>
+<body style="text-align: center;">
+    <h2>Gráfico de Puntos en Movimiento</h2>
+    <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
+    <canvas id="pointCanvas" width="500" height="500" style="border:2px solid black; background: #fff;"></canvas>
+
+    <script>
+        const canvas = document.getElementById("pointCanvas");
+        const ctx = canvas.getContext("2d");
+        
+        // Crear 5 puntos con posiciones iniciales
+        let puntos = Array.from({ length: 5 }, () => ({
+            x: Math.random() * 500,
+            y: Math.random() * 500,
+            color: `rgb(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255})`
+        }));
+
+        function drawPoints() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            puntos.forEach(p => {
+                // Dibujar punto
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 10, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+                ctx.stroke();
+
+                // Actualizar coordenadas aleatoriamente para el siguiente segundo
+                p.x = Math.max(0, Math.min(500, p.x + (Math.random() - 0.5) * 40));
+                p.y = Math.max(0, Math.min(500, p.y + (Math.random() - 0.5) * 40));
+            });
+        }
+
+        setInterval(drawPoints, 1000);
+        drawPoints();
+    </script>
+</body>
+</html>
