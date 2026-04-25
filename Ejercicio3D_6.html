@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 3 - Transformaciones Interactivas</title>
+    <style> body { margin: 0; overflow: hidden; font-family: sans-serif; } 
+            #instrucciones { position: absolute; top: 10px; left: 10px; color: white; background: rgba(0,0,0,0.5); padding: 10px; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div id="instrucciones">
+        Flechas: Mover | R: Rotar | + / - : Escalar
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const cubo = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshNormalMaterial());
+        scene.add(cubo);
+        camera.position.z = 5;
+
+        // Control de teclado
+        window.addEventListener('keydown', (event) => {
+            const paso = 0.1;
+            switch(event.key) {
+                // TRASLACIÓN
+                case 'ArrowLeft':  cubo.position.x -= paso; break;
+                case 'ArrowRight': cubo.position.x += paso; break;
+                case 'ArrowUp':    cubo.position.y += paso; break;
+                case 'ArrowDown':  cubo.position.y -= paso; break;
+                
+                // ROTACIÓN
+                case 'r':
+                case 'R':
+                    cubo.rotation.x += 0.2;
+                    cubo.rotation.y += 0.2;
+                    break;
+                
+                // ESCALADO
+                case '+':
+                    cubo.scale.x += paso;
+                    cubo.scale.y += paso;
+                    cubo.scale.z += paso;
+                    break;
+                case '-':
+                    if(cubo.scale.x > 0.2) {
+                        cubo.scale.x -= paso;
+                        cubo.scale.y -= paso;
+                        cubo.scale.z -= paso;
+                    }
+                    break;
+            }
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>
