@@ -2,47 +2,52 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Curva Coseno Dinámica</title>
+    <title>Curva Coseno - Vladimir Ortiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #6366f1; --bg: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+        .btn-back { position: fixed; top: 20px; left: 20px; padding: 10px 20px; background-color: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; }
+        .header-content { text-align: center; margin-bottom: 25px; }
+        #canvas-container { background: white; border-radius: 12px; border: 4px solid #0f172a; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    </style>
 </head>
-<body style="text-align: center; font-family: sans-serif;">
-    <h2>Curva Dinámica de la Función Coseno</h2>
-    <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
-    <canvas id="cosCanvas" width="500" height="500" style="border:1px solid #000; background: #fafafa;"></canvas>
-
+<body>
+    <a href="index.html" class="btn-back">← REGRESAR</a>
+    <div class="header-content">
+        <h2>Oscilación de Curva Coseno</h2>
+        <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
+    </div>
+    <div id="canvas-container">
+        <canvas id="cosCanvas" width="500" height="400"></canvas>
+    </div>
     <script>
         const canvas = document.getElementById('cosCanvas');
         const ctx = canvas.getContext('2d');
-        let time = 0;
+        let offset = 0;
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Dibujar ejes
-            ctx.strokeStyle = '#ccc';
+            
+            // Ejes
+            ctx.strokeStyle = '#e2e8f0';
             ctx.beginPath();
-            ctx.moveTo(0, 250); ctx.lineTo(500, 250); // Eje X
-            ctx.moveTo(250, 0); ctx.lineTo(250, 500); // Eje Y
+            ctx.moveTo(0, 200); ctx.lineTo(500, 200);
             ctx.stroke();
 
-            // Dibujar Función Coseno
+            // Curva Coseno
             ctx.beginPath();
-            ctx.strokeStyle = 'red';
-            ctx.lineWidth = 3;
-
+            ctx.strokeStyle = '#f43f5e'; // Rosa/Rojo moderno
+            ctx.lineWidth = 4;
             for (let x = 0; x <= 500; x++) {
-                // Función: y = cos(x * frecuencia + tiempo) * amplitud
-                let y = Math.cos((x - 250) * 0.05 + time) * 100;
-                let canvasY = 250 - y;
-
-                if (x === 0) ctx.moveTo(x, canvasY);
-                else ctx.lineTo(x, canvasY);
+                let y = Math.cos(x * 0.05 + offset) * 60;
+                ctx.lineTo(x, 200 - y);
             }
             ctx.stroke();
-
-            time += 0.1; // Incremento de velocidad
+            
+            offset += 0.04;
             requestAnimationFrame(draw);
         }
-
         draw();
     </script>
 </body>

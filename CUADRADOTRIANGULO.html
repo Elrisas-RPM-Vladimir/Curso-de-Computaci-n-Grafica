@@ -1,65 +1,188 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuadrado y triángulo separados por línea</title>
+    <title>Figuras Geométricas - Vladimir Ortiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* BOTÓN REGRESAR */
+        .btn-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .btn-back:hover {
+            background-color: #4f46e5;
+            transform: translateX(-5px);
+        }
+
+        .header-content {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 { margin: 0; color: #0f172a; }
+        h3 { font-weight: 400; color: #64748b; font-size: 1rem; }
+
+        /* CONTENEDOR CANVAS */
+        #canvas-container {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            background: white;
+            border: 4px solid #0f172a;
+            line-height: 0;
+        }
+
+        canvas {
+            cursor: crosshair;
+        }
+    </style>
 </head>
 <body>
-    <h2>Crear un cuadrado y un triángulo</h2>
-    <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
 
-    <canvas id="myCanvas" width="500" height="500" style="border:4px solid black;"></canvas>
+    <a href="index.html" class="btn-back">← REGRESAR</a>
+
+    <div class="header-content">
+        <h2>Composición: Cuadrado y Triángulo</h2>
+        <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
+    </div>
+
+    <div id="canvas-container">
+        <canvas id="myCanvas" width="600" height="500"></canvas>
+    </div>
 
     <script>
-        var canvas = document.getElementById("myCanvas");
-        var ctx = canvas.getContext("2d");
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
 
-        // Limpiar canvas
-        ctx.clearRect(0, 0, 500, 500);
+        // Definición de las figuras
+        let shapes = [
+            {
+                id: 'cuadrado',
+                x: 100, y: 100,
+                w: 120, h: 120,
+                color1: "#3b82f6", color2: "#1d4ed8",
+                isDragging: false
+            },
+            {
+                id: 'triangulo',
+                x: 350, y: 100,
+                w: 140, h: 120,
+                color1: "#ef4444", color2: "#b91c1c",
+                isDragging: false
+            }
+        ];
 
-        // ========== CUADRADO (arriba) ==========
-        // Cuadrado de 150x150 en posición (50, 50)
-        ctx.beginPath();
-        ctx.rect(50, 50, 150, 150);
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Degradado verde a lima
-        var gradSquare = ctx.createLinearGradient(50, 50, 200, 200);
-        gradSquare.addColorStop(0, 'green');
-        gradSquare.addColorStop(1, 'lime');
-        ctx.fillStyle = gradSquare;
-        ctx.fill();
-        ctx.strokeStyle = "black";
-        ctx.stroke();
+            shapes.forEach(shape => {
+                if(shape.id === 'cuadrado') {
+                    // Diseño Cuadrado con degradado
+                    let grad = ctx.createLinearGradient(shape.x, shape.y, shape.x + shape.w, shape.y + shape.h);
+                    grad.addColorStop(0, shape.color1);
+                    grad.addColorStop(1, shape.color2);
+                    
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(shape.x, shape.y, shape.w, shape.h);
+                    ctx.strokeStyle = "#0f172a";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(shape.x, shape.y, shape.w, shape.h);
+                } else {
+                    // Diseño Triángulo con degradado
+                    let grad = ctx.createLinearGradient(shape.x, shape.y, shape.x, shape.y + shape.h);
+                    grad.addColorStop(0, shape.color1);
+                    grad.addColorStop(1, shape.color2);
 
-        // ========== LÍNEA NEGRA QUE CORTA EL CUADRADO POR LA MITAD ==========
-        // El cuadrado está en Y = 50 a Y = 200
-        // La mitad es Y = 125
-        ctx.beginPath();
-        ctx.moveTo(50, 125);
-        ctx.lineTo(200, 125);
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 3;
-        ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(shape.x + shape.w / 2, shape.y);
+                    ctx.lineTo(shape.x, shape.y + shape.h);
+                    ctx.lineTo(shape.x + shape.w, shape.y + shape.h);
+                    ctx.closePath();
+                    
+                    ctx.fillStyle = grad;
+                    ctx.fill();
+                    ctx.strokeStyle = "#0f172a";
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                }
+            });
+        }
 
-        // ========== TRIÁNGULO (debajo, completamente separado) ==========
-        // Triángulo centrado debajo del cuadrado, empezando en Y = 210
-        ctx.beginPath();
-        ctx.moveTo(75, 350);   // base izquierda
-        ctx.lineTo(175, 350);  // base derecha
-        ctx.lineTo(125, 210);  // vértice superior (toca justo debajo de la línea)
-        ctx.closePath();
+        // Detección de colisiones
+        function getTarget(mouseX, mouseY) {
+            for (let i = shapes.length - 1; i >= 0; i--) {
+                let s = shapes[i];
+                if (mouseX >= s.x && mouseX <= s.x + s.w && mouseY >= s.y && mouseY <= s.y + s.h) {
+                    return s;
+                }
+            }
+            return null;
+        }
 
-        // Degradado rojo a amarillo
-        var gradTri = ctx.createLinearGradient(125, 210, 125, 350);
-        gradTri.addColorStop(0, 'red');
-        gradTri.addColorStop(1, 'yellow');
-        ctx.fillStyle = gradTri;
-        ctx.fill();
-        ctx.strokeStyle = "black";
-        ctx.stroke();
+        canvas.addEventListener("mousedown", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            let target = getTarget(mouseX, mouseY);
+            if (target) {
+                target.isDragging = true;
+                target.offsetX = mouseX - target.x;
+                target.offsetY = mouseY - target.y;
+            }
+        });
 
-        ctx.lineWidth = 1;
+        window.addEventListener("mousemove", (e) => {
+            shapes.forEach(s => {
+                if (s.isDragging) {
+                    const rect = canvas.getBoundingClientRect();
+                    let mouseX = e.clientX - rect.left;
+                    let mouseY = e.clientY - rect.top;
+
+                    // Limitar al canvas
+                    s.x = Math.max(0, Math.min(canvas.width - s.w, mouseX - s.offsetX));
+                    s.y = Math.max(0, Math.min(canvas.height - s.h, mouseY - s.offsetY));
+                    draw();
+                }
+            });
+        });
+
+        window.addEventListener("mouseup", () => {
+            shapes.forEach(s => s.isDragging = false);
+        });
+
+        draw();
     </script>
 </body>
 </html>

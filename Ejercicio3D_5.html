@@ -2,32 +2,116 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ejercicio 2 - Rotación 3D</title>
-    <style> body { margin: 0; overflow: hidden; } </style>
+    <title>Ejercicio 3D 5 - Vladimir Ortiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; overflow: hidden; font-family: 'Inter', sans-serif; background: #0f172a; }
+        
+        /* BOTÓN REGRESAR */
+        .btn-back { 
+            position: fixed; top: 20px; left: 20px; padding: 10px 20px; 
+            background: #6366f1; color: white; text-decoration: none; 
+            border-radius: 8px; z-index: 100; font-weight: 600; 
+        }
+
+        /* LEYENDA PROFESIONAL */
+        #leyenda {
+            position: absolute; top: 80px; left: 20px; 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 20px; border-radius: 12px; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            border: 1px solid #e2e8f0; width: 220px; z-index: 50;
+        }
+
+        #leyenda h3 { margin: 0 0 15px 0; font-size: 1.1rem; color: #1e293b; text-align: center; }
+
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+
+        .mode-btn {
+            padding: 10px; border: 2px solid #6366f1; border-radius: 6px;
+            background: white; color: #6366f1; cursor: pointer;
+            font-weight: 600; transition: all 0.3s;
+        }
+
+        .mode-btn.active { background: #6366f1; color: white; }
+        
+        .hint { font-size: 0.75rem; color: #64748b; margin-top: 10px; text-align: center; }
+    </style>
 </head>
 <body>
+    <a href="index.html" class="btn-back">← REGRESAR</a>
+
+    <div id="leyenda">
+        <h3>Espacio del Cubo</h3>
+        <div class="btn-group">
+            <button id="btnInteract" class="mode-btn active">Interactuar</button>
+            <button id="btnMove" class="mode-btn">Mover</button>
+        </div>
+        <p class="hint">Al soltar, vuelve a su rotación normal tras 2 segundos. (función solo activa al usar "Interactuar."!!)</p>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
         const cubo = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 1.5), new THREE.MeshNormalMaterial());
         scene.add(cubo);
-
         camera.position.z = 5;
+
+        // Estados y Variables
+        let mode = 'interact'; // 'interact' o 'move'
+        let isPressed = false;
+        let lastInteractionTime = Date.now();
+
+        // Control de botones
+        const btnInteract = document.getElementById('btnInteract');
+        const btnMove = document.getElementById('btnMove');
+
+        btnInteract.onclick = () => { mode = 'interact'; btnInteract.classList.add('active'); btnMove.classList.remove('active'); };
+        btnMove.onclick = () => { mode = 'move'; btnMove.classList.add('active'); btnInteract.classList.remove('active'); };
+
+        // Eventos de Mouse
+        window.addEventListener('mousedown', () => isPressed = true);
+        window.addEventListener('mouseup', () => { isPressed = false; lastInteractionTime = Date.now(); });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isPressed) {
+                lastInteractionTime = Date.now();
+                if (mode === 'interact') {
+                    // Rotar el cubo
+                    cubo.rotation.y += e.movementX * 0.01;
+                    cubo.rotation.x += e.movementY * 0.01;
+                } else if (mode === 'move') {
+                    // Mover la posición del cubo[cite: 17, 20]
+                    cubo.position.x += e.movementX * 0.01;
+                    cubo.position.y -= e.movementY * 0.01; // Invertido para coincidir con el mouse
+                }
+            }
+        });
 
         function animate() {
             requestAnimationFrame(animate);
+            const idleTime = Date.now() - lastInteractionTime;
 
-            // Rotación continua en X e Y
-            cubo.rotation.x += 0.01;
-            cubo.rotation.y += 0.02;
+            // Retorno a rotación normal tras 2 segundos de inactividad
+            if (!isPressed && idleTime > 2000) {
+                cubo.rotation.x += 0.01;
+                cubo.rotation.y += 0.02;
+            }
 
             renderer.render(scene, camera);
         }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
         animate();
     </script>
 </body>

@@ -1,60 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>objetos 3D</title>
+    <title>Ejercicio 3D 1 - Vladimir Ortiz</title>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: 'Inter', sans-serif; }
+        .btn-back { position: fixed; top: 20px; left: 20px; padding: 10px 20px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; z-index: 10; }
+        #info { position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.7); color: white; padding: 15px; border-radius: 8px; }
+        input { width: 100px; }
+    </style>
 </head>
 <body>
-    <!-- EJERCICIO DE TRASLACIÓN -->
-<!-- USO DE LA LIBRERIA THREE.JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<SCRIpt>
-    // CREAR LA ESCENA
-    const scene = new THREE.Scene();
-    // CREAR UNA CAMARA
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    // CREAR UN RENDERIZADOR
-    const renderer = new THREE.WebGLRenderer();
-    
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    <a href="index.html" class="btn-back">← REGRESAR</a>
+    <div id="info">
+        <b>Control de Movimiento</b><br>
+        Velocidad: <input type="range" id="velRange" min="0" max="0.2" step="0.01" value="0.05">
+    </div>
 
-    // CREAR EL CUBO
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-    const geometry = new THREE.BoxGeometry(1,1,1);
-    const material = new THREE.MeshNormalMaterial();
-    const cubo = new THREE.Mesh(geometry, material);
-    scene.add(cubo);
+        const cubo = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshNormalMaterial());
+        scene.add(cubo);
+        camera.position.z = 5;
 
-    // POSICIONAR LA CAMARA
-    camera.position.z = 5;
+        let dir = 1;
+        const velInput = document.getElementById('velRange');
 
-    // variables para controlar la posición del cubo
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            let speed = parseFloat(velInput.value);
+            cubo.position.x += speed * dir;
 
-    let direccion = 0.02;
+            // Cálculo dinámico de límites de pantalla en Z=0
+            const vFOV = THREE.MathUtils.degToRad(camera.fov);
+            const height = 2 * Math.tan(vFOV / 2) * camera.position.z;
+            const width = height * camera.aspect;
+            const limit = width / 2 - 0.5; // 0.5 es la mitad del ancho del cubo
 
-    // ANIMACIÓN 
-    function animate() {
-        requestAnimationFrame(animate);
-        // MOVER EL CUBO
-        cubo.position.x += direccion;
-        // CAMBIAR LA DIRECCIÓN SI EL CUBO LLEGA A LOS LÍMITE DERECHO 
-        if (cubo.position.x > 2) {
-            direccion = -0.02;
+            if (cubo.position.x > limit || cubo.position.x < -limit) {
+                dir *= -1;
+            }
+
+            renderer.render(scene, camera);
         }
-        // CAMBIAR LA DIRECCIÓN SI EL CUBO LLEGA A LOS LÍMITE IZQUIERDO 
-        if (cubo.position.x > -2) {
-            direccion = 0.02;
-        }
-
-        //Dibujar la escena
-        renderer.render(scene, camera);
-    }
-    animate();
-
-</SCRIpt>
-
-   
+        animate();
+    </script>
 </body>
 </html>

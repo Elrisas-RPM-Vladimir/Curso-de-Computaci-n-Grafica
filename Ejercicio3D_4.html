@@ -2,44 +2,88 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ejercicio 1 - Traslación 3D</title>
-    <style> body { margin: 0; overflow: hidden; } </style>
+    <title>Ejercicio 3D 4 - Vladimir Ortiz</title>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: 'Inter', sans-serif; background: #000; }
+        .btn-back { position: fixed; top: 20px; left: 20px; padding: 10px 20px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; z-index: 10; font-weight: bold; }
+        #panel { position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.8); color: white; padding: 20px; border-radius: 12px; border: 1px solid #444; }
+        .ctrl-group { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        button { cursor: pointer; padding: 5px 10px; border-radius: 4px; border: none; background: #4f46e5; color: white; }
+        button.paused { background: #ef4444; }
+    </style>
 </head>
 <body>
+    <a href="index.html" class="btn-back">← REGRESAR</a>
+    <div id="panel">
+        <b>Control de Movimiento</b><br>
+        <div class="ctrl-group">
+            <label>Vel. Traslación:</label>
+            <input type="range" id="velRange" min="0" max="0.2" step="0.01" value="0.02">
+            <label>Vel. Rotación:</label>
+            <input type="range" id="rotSpeed" min="0" max="0.1" step="0.001" value="0.02">
+        </div>
+
+        <div class="ctrl-group">
+            <button id="btnPauseRot">Pausar Rotación</button>
+            <button id="btnPauseTrans">Pausar Traslación</button>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Escena, Cámara y Renderizador
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Geometría y Material del Cubo
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshNormalMaterial();
-        const cubo = new THREE.Mesh(geometry, material);
+        const cubo = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 1.2), new THREE.MeshNormalMaterial());
         scene.add(cubo);
-
         camera.position.z = 5;
 
-        // Lógica de Traslación
-        let velocidad = 0.05;
-        const limite = 2;
+        // Estados
+        let isRotPaused = false;
+        let isTransPaused = false;
+        let transVel = 0.05;
+        let dir = 1;
+
+        // UI Handlers
+        document.getElementById('btnPauseRot').onclick = (e) => {
+            isRotPaused = !isRotPaused;
+            e.target.innerText = isRotPaused ? "Continuar Rotación" : "Pausar Rotación";
+            e.target.classList.toggle('paused');
+        };
+        document.getElementById('btnPauseTrans').onclick = (e) => {
+            isTransPaused = !isTransPaused;
+            e.target.innerText = isTransPaused ? "Continuar Traslación" : "Pausar Traslación";
+            e.target.classList.toggle('paused');
+        };
 
         function animate() {
             requestAnimationFrame(animate);
+            // Rotación Aleatoria
+            if (!isRotPaused) {
+                const speed = parseFloat(document.getElementById('rotSpeed').value);
+                cubo.rotation.x += speed;
+                cubo.rotation.y += speed * 1.5;
+            }
 
-            // Traslación en el eje X
-            cubo.position.x += velocidad;
-
-            // Comprobar límites para cambiar de dirección
-            if (cubo.position.x > limite || cubo.position.x < -limite) {
-                velocidad *= -1;
+            // Traslación con rebote
+            if (!isTransPaused) {
+                const speed = parseFloat(document.getElementById('velRange').value);
+                cubo.position.x += speed * dir;
+                if (Math.abs(cubo.position.x) > 2.5) dir *= -1;
             }
 
             renderer.render(scene, camera);
         }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
         animate();
     </script>
 </body>

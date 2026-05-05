@@ -1,46 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>creación de un círculo</title>
+    <title>Círculo Interactivo - Computación Gráfica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* BOTÓN REGRESAR */
+        .btn-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .btn-back:hover {
+            background-color: #4f46e5;
+            transform: translateX(-5px);
+        }
+
+        /* TEXTOS CENTRADOS */
+        .header-content {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 { margin: 0; color: #0f172a; }
+        h3 { font-weight: 400; color: #64748b; font-size: 1rem; }
+
+        /* CANVAS CENTRADO */
+        #canvas-container {
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            border: 4px solid #0f172a;
+        }
+
+        canvas {
+            display: block;
+            cursor: grab;
+        }
+
+        canvas:active {
+            cursor: grabbing;
+        }
+    </style>
 </head>
 <body>
-    <h2>Dibujo de un círculo</h2>
-    <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
-    <!-- DEFINIR UN AREA DE DIBUJO CON EL ELEMENTO CANVAS -->
 
-    <canvas id="myCanvas" width="500" height="500" style="border:4px solid black;"></CAnvas>
-<!-- CODIGO  JAVASCRIPT -->
+    <a href="index.html" class="btn-back">← REGRESAR</a>
+
+    <div class="header-content">
+        <h2>Dibujo de un Círculo Interactivo</h2>
+        <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
+    </div>
+
+    <div id="canvas-container">
+        <canvas id="myCanvas" width="500" height="500"></canvas>
+    </div>
+
     <script>
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
 
-        // OBTENER EL CONTEXTO DE DIBUJO DEL CANVAS
-        var canvas = document.getElementById("myCanvas");
+        // Estado inicial del círculo
+        let circle = {
+            x: 250,
+            y: 250,
+            radius: 100,
+            color: "red",
+            isDragging: false
+        };
 
-        //se obtiene el contexto de dibujo en 2D
-        var  ctx = canvas.getContext("2d");
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // comenzar el trazado de una (circulo en este punto se inicia el dibujo)
-        ctx.beginPath();
+            // Dibujar el círculo
+            ctx.beginPath();
+            ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI);
+            ctx.fillStyle = circle.color;
+            ctx.fill();
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "black";
+            ctx.stroke();
+            ctx.closePath();
+        }
 
-        // dibujar el arco para representar el circulo 
-                // las coordendas (x, y) ubique el centro.
-         // el radio del circulo es de 100 pixeles 
+        // Función para verificar si el click está dentro del círculo
+        function isInsideCircle(mouseX, mouseY) {
+            const distance = Math.sqrt((mouseX - circle.x) ** 2 + (mouseY - circle.y) ** 2);
+            return distance < circle.radius;
+        }
 
-         ctx.arc(250, 250, 100,0, 2 * Math.PI);   
+        // EVENTOS DE MOUSE
+        canvas.addEventListener("mousedown", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
 
-        // definir el color del relleno del circulo
-        ctx.fillStyle = "red";
-        // definir el color del área del cuadrado
-        ctx.strokeStyle = "blue";
+            if (isInsideCircle(mouseX, mouseY)) {
+                circle.isDragging = true;
+            }
+        });
 
-        // rellenar el circulo con el color definido
-        ctx.fill();
-        
-        // dibujar el borde del circulo con un color diferente
-        ctx.stroke();
+        window.addEventListener("mousemove", (e) => {
+            if (circle.isDragging) {
+                const rect = canvas.getBoundingClientRect();
+                let mouseX = e.clientX - rect.left;
+                let mouseY = e.clientY - rect.top;
+
+                // LIMITAR EL MOVIMIENTO AL RECUADRO (Bordes del Canvas)
+                // Restamos el radio para que el círculo no se salga de los límites
+                circle.x = Math.max(circle.radius, Math.min(canvas.width - circle.radius, mouseX));
+                circle.y = Math.max(circle.radius, Math.min(canvas.height - circle.radius, mouseY));
+
+                draw();
+            }
+        });
+
+        window.addEventListener("mouseup", () => {
+            circle.isDragging = false;
+        });
+
+        // Dibujo inicial
+        draw();
     </script>
-
-
 </body>
 </html>

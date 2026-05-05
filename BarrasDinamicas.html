@@ -2,48 +2,104 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gráfico de Barras Dinámico</title>
+    <title>Barras Dinámicas Aleatorias - Vladimir Ortiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #f4f4f4; }
-        .chart-area {
-            border: 2px solid #000; height: 300px; width: 400px;
-            display: flex; align-items: flex-end; justify-content: space-around;
-            padding: 10px; background: white;
-        }
-        .bar {
-            width: 50px; background-color: #3498db; border: 1px solid #2980b9;
-            position: relative; transition: height 0.5s ease-in-out;
-        }
-        .label { position: absolute; top: -25px; width: 100%; text-align: center; font-weight: bold; }
+        :root { --primary: #6366f1; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+        
+        /* BOTÓN REGRESAR */
+        .btn-back { position: fixed; top: 20px; left: 20px; padding: 10px 20px; background-color: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; }
+        .btn-back:hover { background-color: #4f46e5; transform: translateX(-5px); }
+
+        .header-content { text-align: center; margin-bottom: 25px; }
+        h2 { margin: 0; color: #0f172a; }
+        h3 { font-weight: 400; color: #64748b; font-size: 0.9rem; }
+
+        /* CONTENEDOR DEL CANVAS */
+        #canvas-container { background: white; border-radius: 12px; border: 4px solid #0f172a; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; }
+        canvas { display: block; }
     </style>
 </head>
 <body>
-    <h2>Gráfico de Barras Dinámico</h2>
-    <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
-    <div class="chart-area" id="chart">
-        <div class="bar"><span class="label">0%</span></div>
-        <div class="bar"><span class="label">0%</span></div>
-        <div class="bar"><span class="label">0%</span></div>
-        <div class="bar"><span class="label">0%</span></div>
-        <div class="bar"><span class="label">0%</span></div>
+
+    <a href="index.html" class="btn-back">← REGRESAR</a>
+
+    <div class="header-content">
+        <h2>Monitoreo de Datos Aleatorios</h2>
+        <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
+    </div>
+
+    <div id="canvas-container">
+        <canvas id="barCanvas" width="500" height="400"></canvas>
     </div>
 
     <script>
-        const bars = document.querySelectorAll('.bar');
-        const labels = document.querySelectorAll('.label');
+        const canvas = document.getElementById('barCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Configuración de las barras con valores iniciales y velocidades aleatorias
+        const bars = [
+            { h: 150, target: 150, color: '#ef4444', speed: 0.05 },
+            { h: 230, target: 230, color: '#3b82f6', speed: 0.07 },
+            { h: 180, target: 180, color: '#10b981', speed: 0.04 },
+            { h: 300, target: 300, color: '#f59e0b', speed: 0.06 },
+            { h: 200, target: 200, color: '#8b5cf6', speed: 0.08 }
+        ];
 
         function updateBars() {
-            bars.forEach((bar, index) => {
-                const randomValue = Math.floor(Math.random() * 91) + 10; // Entre 10 y 100
-                bar.style.height = randomValue + "%";
-                labels[index].innerText = randomValue + "%";
-                // Cambiar color aleatoriamente para mayor dinamismo
-                bar.style.backgroundColor = `hsl(${randomValue * 2}, 70%, 50%)`;
+            bars.forEach(bar => {
+                // Si la barra llega cerca de su objetivo, definimos uno nuevo aleatorio
+                if (Math.abs(bar.h - bar.target) < 1) {
+                    bar.target = Math.random() * 300 + 20; // Altura entre 20 y 320
+                    bar.speed = Math.random() * 0.1 + 0.02; // Velocidad aleatoria para cada tramo
+                }
+                
+                // Interpolación suave hacia el objetivo
+                bar.h += (bar.target - bar.h) * bar.speed;
             });
         }
 
-        setInterval(updateBars, 1000);
-        updateBars(); // Llamada inicial
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar base/piso del gráfico
+            ctx.strokeStyle = "#e2e8f0";
+            ctx.beginPath();
+            ctx.moveTo(30, canvas.height - 20);
+            ctx.lineTo(470, canvas.height - 20);
+            ctx.stroke();
+
+            bars.forEach((bar, i) => {
+                const x = 60 + (i * 85);
+                const width = 50;
+                const y = canvas.height - bar.h - 20;
+
+                // Sombra suave
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = 'rgba(0,0,0,0.05)';
+
+                // Cuerpo de la barra con degradado
+                let grd = ctx.createLinearGradient(x, y, x, canvas.height - 20);
+                grd.addColorStop(0, bar.color);
+                grd.addColorStop(1, bar.color + "66"); // Mismo color con transparencia al final
+
+                ctx.fillStyle = grd;
+                ctx.fillRect(x, y, width, bar.h);
+
+                // Texto del porcentaje/valor
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = "#1e293b";
+                ctx.font = "bold 13px Inter";
+                ctx.textAlign = "center";
+                ctx.fillText(Math.round((bar.h / 350) * 100) + "%", x + width/2, y - 10);
+            });
+            
+            updateBars();
+            requestAnimationFrame(draw);
+        }
+
+        draw();
     </script>
 </body>
 </html>

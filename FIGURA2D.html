@@ -3,37 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gráfico de una función</title>
-    <h2>Creado por: Vladimir Alexandre Ortiz Chaccara</h2>
+    <title>Gráfico de Función 2D - Computación Gráfica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --axis: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* BOTÓN REGRESAR */
+        .btn-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .btn-back:hover {
+            background-color: #4f46e5;
+            transform: translateX(-5px);
+        }
+
+        /* CABECERA CENTRADA */
+        .header-content {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h2 { margin: 0; color: #0f172a; font-size: 1.5rem; }
+        h3 { font-weight: 400; color: #64748b; font-size: 0.95rem; margin-top: 5px; }
+
+        /* CONTENEDOR DEL CANVAS */
+        #canvas-container {
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            border: 4px solid #0f172a;
+        }
+
+        canvas {
+            display: block;
+            background-color: #ffffff;
+        }
+    </style>
 </head>
 <body>
-    <h2>Gráfico de una función</h2>
-    <canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;"></canvas> 
-    
-<!-- CÓDIGO JAVASCRIPT -->
-    
+
+    <a href="index.html" class="btn-back">← REGRESAR</a>
+
+    <div class="header-content">
+        <h2>Gráfico de Función Cuadrática (y = x²/100)</h2>
+        <h3>Estudiante: Vladimir Alexandre Ortiz Chaccara</h3>
+    </div>
+
+    <div id="canvas-container">
+        <canvas id="myCanvas" width="500" height="500"></canvas>
+    </div>
+
     <script>
-        var canvas = document.getElementById('myCanvas');
-        var ctx = canvas.getContext('2d');
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
 
-        // Dibujar los ejes
-        ctx.beginPath();
-        ctx.moveTo(0, 250); // Eje X
-        ctx.lineTo(500, 250);
-        ctx.moveTo(250, 0); // Eje Y
-        ctx.lineTo(250, 500);
-        ctx.stroke();
+        function drawGraph() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Función a gráficar: y = x^2/100
-        ctx.beginPath();
-        ctx.moveTo(0, 250); // iniciar con el eje X
-        
-        for (var x = -250; x <= 250; x++) {
-            var y = Math.pow(x, 2)/ 100; // función para que se ajuste el canvas
-            ctx.lineTo(250 + x, 250 - y); // ajusta la posición para centrar en el canvas
+            // 1. Dibujar los ejes (Centrados)
+            ctx.beginPath();
+            ctx.strokeStyle = '#94a3b8'; // Color gris suave para los ejes
+            ctx.lineWidth = 1;
+            
+            // Eje X
+            ctx.moveTo(0, 250);
+            ctx.lineTo(500, 250);
+            
+            // Eje Y
+            ctx.moveTo(250, 0);
+            ctx.lineTo(250, 500);
+            ctx.stroke();
+
+            // 2. Dibujar la Función: y = x^2 / 100
+            ctx.beginPath();
+            ctx.strokeStyle = '#ef4444'; // Color rojo vibrante para la curva
+            ctx.lineWidth = 3;
+
+            for (let x = -250; x <= 250; x++) {
+                // Calcular la función
+                let y = Math.pow(x, 2) / 100;
+                
+                // Mapear coordenadas al centro del canvas (250, 250)
+                // Invertimos la 'y' porque en canvas el 0 está arriba
+                let canvasX = 250 + x;
+                let canvasY = 250 - y;
+
+                if (x === -250) {
+                    ctx.moveTo(canvasX, canvasY);
+                } else {
+                    ctx.lineTo(canvasX, canvasY);
+                }
+            }
+            ctx.stroke();
         }
-        ctx.strokeStyle = 'blue'; // color de la función
-        ctx.stroke();
+
+        // Ejecutar el dibujo
+        drawGraph();
     </script>
 </body>
 </html>

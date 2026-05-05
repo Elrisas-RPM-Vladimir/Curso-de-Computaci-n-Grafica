@@ -2,18 +2,27 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ejercicio 3 - Transformaciones Interactivas</title>
-    <style> body { margin: 0; overflow: hidden; font-family: sans-serif; } 
-            #instrucciones { position: absolute; top: 10px; left: 10px; color: white; background: rgba(0,0,0,0.5); padding: 10px; pointer-events: none; }
+    <title>Ejercicio 3D 6 - Vladimir Ortiz</title>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: sans-serif; }
+        .btn-back { position: fixed; top: 20px; left: 20px; padding: 10px 20px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; z-index: 10; }
+        #info { position: absolute; top: 80px; left: 20px; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 10px; border: 2px solid #6366f1; font-size: 13px; }
+        kbd { background: #eee; padding: 2px 5px; border-radius: 3px; border: 1px solid #ccc; }
     </style>
 </head>
 <body>
-    <div id="instrucciones">
-        Flechas: Mover | R: Rotar | + / - : Escalar
+    <a href="index.html" class="btn-back">← REGRESAR</a>
+    <div id="info">
+        <b>PANEL DE CONTROL</b><br><br>
+        🚀 <kbd>WASD</kbd> : Rotación Libre<br>
+        ↔️ <kbd>Flechas</kbd> : Traslación<br>
+        🔍 <kbd>Z</kbd> / <kbd>X</kbd> : Escalar +/-
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1e293b);
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -23,36 +32,23 @@
         scene.add(cubo);
         camera.position.z = 5;
 
-        // Control de teclado
-        window.addEventListener('keydown', (event) => {
-            const paso = 0.1;
-            switch(event.key) {
-                // TRASLACIÓN
-                case 'ArrowLeft':  cubo.position.x -= paso; break;
-                case 'ArrowRight': cubo.position.x += paso; break;
-                case 'ArrowUp':    cubo.position.y += paso; break;
-                case 'ArrowDown':  cubo.position.y -= paso; break;
-                
-                // ROTACIÓN
-                case 'r':
-                case 'R':
-                    cubo.rotation.x += 0.2;
-                    cubo.rotation.y += 0.2;
-                    break;
-                
-                // ESCALADO
-                case '+':
-                    cubo.scale.x += paso;
-                    cubo.scale.y += paso;
-                    cubo.scale.z += paso;
-                    break;
-                case '-':
-                    if(cubo.scale.x > 0.2) {
-                        cubo.scale.x -= paso;
-                        cubo.scale.y -= paso;
-                        cubo.scale.z -= paso;
-                    }
-                    break;
+        window.addEventListener('keydown', (e) => {
+            const step = 0.1;
+            const rotStep = 0.15;
+            switch(e.key.toLowerCase()) {
+                // Rotación WASD
+                case 'w': cubo.rotation.x -= rotStep; break;
+                case 's': cubo.rotation.x += rotStep; break;
+                case 'a': cubo.rotation.y -= rotStep; break;
+                case 'd': cubo.rotation.y += rotStep; break;
+                // Traslación Flechas
+                case 'arrowup':    cubo.position.y += step; break;
+                case 'arrowdown':  cubo.position.y -= step; break;
+                case 'arrowleft':  cubo.position.x -= step; break;
+                case 'arrowright': cubo.position.x += step; break;
+                // Escalado
+                case 'z': cubo.scale.multiplyScalar(1.1); break;
+                case 'x': if(cubo.scale.x > 0.2) cubo.scale.multiplyScalar(0.9); break;
             }
         });
 
@@ -64,3 +60,4 @@
     </script>
 </body>
 </html>
+<!--investigar para que los cubos no salgan de los limites de la pantalla y darles un diseño bonito como tambien evitar que se deformen al usar la camara para ver de distintos angulos-->
