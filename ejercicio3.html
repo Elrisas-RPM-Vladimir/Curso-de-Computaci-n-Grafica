@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ejercicio 3 - Pygame</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      background: #f3f8ff;
+      color: #21364d;
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(135deg, #0f4c81, #2b7bb9);
+      color: white;
+      padding: 32px 20px;
+      text-align: center;
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+    }
+    section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #0f4c81;
+      margin-top: 0;
+    }
+    .links a {
+      display: inline-block;
+      margin-right: 12px;
+      margin-top: 8px;
+      color: #0f4c81;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+    pre {
+      background: #111827;
+      color: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+      padding: 12px;
+      background: #f9fcff;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .card h3 {
+      margin: 0 0 6px;
+      color: #21364d;
+    }
+    ul {
+      padding-left: 20px;
+    }
+  </style>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: 'Inter', sans-serif; }
+        .btn-back { position: fixed; top: 20px; left: 20px; padding: 10px 20px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; z-index: 10; }
+        #info { position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.7); color: white; padding: 15px; border-radius: 8px; }
+        input { width: 100px; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="btn-back">← REGRESAR</a>
+  <header>
+    <h1>Ejercicio 3 - Introducción a Pygame</h1>
+    <p>Presentación del notebook y del resultado visual generado con Pygame.</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Archivo del notebook</h2>
+      <p>Este ejercicio se basa en el archivo:</p>
+      <div class="links">
+        <a href="ejercicio_3__PYGAME.ipynb">Abrir notebook</a>
+        <a href="ejercicio_3__PYGAME.py">Ver versión en Python</a>
+      </div>
+      <pre><code>import pygame
+pygame.init()
+
+pantalla = pygame.display.set_mode((500, 350))
+pygame.display.set_caption("Ejercicio Pygame")
+
+pantalla.fill((135, 206, 235))
+pygame.draw.rect(pantalla, (34, 139, 34), (0, 280, 500, 70))
+pygame.draw.rect(pantalla, (220, 50, 50), (60, 230, 40, 50))
+pygame.draw.circle(pantalla, (255, 215, 0), (180, 210), 15)
+pygame.draw.circle(pantalla, (255, 215, 0), (250, 210), 15)
+pygame.draw.circle(pantalla, (255, 215, 0), (320, 210), 15)
+
+fuente = pygame.font.SysFont("Arial", 26, bold=True)
+texto = fuente.render("Puntos: 300", True, (255, 255, 255))
+pantalla.blit(texto, (20, 15))
+
+pygame.display.flip()
+pygame.image.save(pantalla, "captura_pygame.png")</code></pre>
+    </section>
+
+    <section>
+      <h2>Resultado visual</h2>
+      <div class="gallery">
+        <div class="card">
+          <img src="assets/images/ejercicio3_pygame.png" alt="Escena creada con Pygame" />
+          <h3>Captura del ejercicio</h3>
+          <p>Escena con cielo azul, suelo verde, personaje rojo y monedas amarillas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Qué se trabajó</h2>
+      <ul>
+        <li>Creación de una ventana con Pygame.</li>
+        <li>Dibujo de formas geométricas como rectángulos y círculos.</li>
+        <li>Escritura de texto sobre la pantalla.</li>
+        <li>Guardado de una captura como imagen PNG.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

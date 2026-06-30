@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ejercicio 1 - Seaborn</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      background: #f4f7fb;
+      color: #233142;
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(135deg, #1f4e79, #3f80c7);
+      color: white;
+      padding: 32px 20px;
+      text-align: center;
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+    }
+    section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #1f4e79;
+      margin-top: 0;
+    }
+    .links a {
+      display: inline-block;
+      margin-right: 12px;
+      margin-top: 8px;
+      color: #1f4e79;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      border: 1px solid #dce6f0;
+      border-radius: 10px;
+      padding: 12px;
+      background: #fcfdff;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .card h3 {
+      margin: 0 0 6px;
+      color: #233142;
+    }
+    ul {
+      padding-left: 20px;
+    }
+  </style>
+  <style>
+        body { margin: 0; overflow: hidden; font-family: 'Inter', sans-serif; }
+        .btn-back { position: fixed; top: 20px; left: 20px; padding: 10px 20px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; z-index: 10; }
+        #info { position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.7); color: white; padding: 15px; border-radius: 8px; }
+        input { width: 100px; }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="btn-back">← REGRESAR</a>
+  <header>
+    <h1>Ejercicio 1 - Introducción a Seaborn</h1>
+    <p>Presentación visual del notebook y de los gráficos generados con Python.</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Archivo del notebook</h2>
+      <p>Este ejercicio se basa en el archivo:</p>
+      <div class="links">
+        <a href="ejercicio_1_SEABORN.ipynb">Abrir notebook</a>
+        <a href="ejercicio_1_SEABORN.py">Ver versión en Python</a>
+      </div>
+      <pre><code># LIBRERÍA: Seaborn
+# Para qué sirve: hacer gráficos estadísticos bonitos con pocas líneas
+# Se aplica en: análisis de notas, ventas, encuestas, salud
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+notas = [12, 14, 15, 11, 18, 13, 16, 10, 17, 14]
+cursos = ["Lunes","Martes","Miércoles","Jueves","Viernes",
+          "Lunes","Martes","Miércoles","Jueves","Viernes"]
+
+sns.set_theme(style="whitegrid")
+
+sns.histplot(notas, bins=5, color="steelblue")
+plt.title("Distribución de notas")
+plt.show()
+
+import pandas as pd
+
+df = pd.DataFrame({"nota": notas, "dia": cursos})
+sns.barplot(data=df, x="dia", y="nota", palette="Blues_d")
+plt.title("Promedio de notas por día")
+plt.show()
+
+sns.boxplot(x=notas, color="lightgreen")
+plt.title("Boxplot de notas")
+plt.show()
+
+horas = [2, 3, 5, 1, 6, 4, 7, 1, 5, 3]
+sns.scatterplot(x=horas, y=notas, color="red")
+plt.title("Horas de estudio vs Nota")
+plt.show()
+
+print("✅ Ejercicio Seaborn completado")</code></pre>
+    </section>
+
+    <section>
+      <h2>Gráficos generados</h2>
+      <div class="gallery">
+        <div class="card">
+          <img src="assets/images/ejercicio1_histplot.png" alt="Histograma de notas" />
+          <h3>Histograma</h3>
+          <p>Muestra cuántas veces se repite cada nota.</p>
+        </div>
+        <div class="card">
+          <img src="assets/images/ejercicio1_barplot.png" alt="Gráfico de barras por día" />
+          <h3>Gráfico de barras</h3>
+          <p>Compara el promedio de notas según el día.</p>
+        </div>
+        <div class="card">
+          <img src="assets/images/ejercicio1_boxplot.png" alt="Boxplot de notas" />
+          <h3>Boxplot</h3>
+          <p>Representa la dispersión y la mediana de las notas.</p>
+        </div>
+        <div class="card">
+          <img src="assets/images/ejercicio1_scatterplot.png" alt="Gráfico de dispersión" />
+          <h3>Scatter plot</h3>
+          <p>Relaciona las horas de estudio con la nota obtenida.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Qué se trabajó en este ejercicio</h2>
+      <ul>
+        <li>Uso de Seaborn para crear gráficos estadísticos.</li>
+        <li>Aplicación de estilos visuales con <strong>set_theme</strong>.</li>
+        <li>Generación de gráficos como histograma, barras, boxplot y dispersión.</li>
+        <li>Visualización de datos con Matplotlib y Pandas.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

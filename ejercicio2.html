@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ejercicio 2 - SciPy</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      background: #f7f3ff;
+      color: #2f234b;
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(135deg, #5b2c83, #8e44ad);
+      color: white;
+      padding: 32px 20px;
+      text-align: center;
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+    }
+    section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #5b2c83;
+      margin-top: 0;
+    }
+    .links a {
+      display: inline-block;
+      margin-right: 12px;
+      margin-top: 8px;
+      color: #5b2c83;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+    pre {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      border: 1px solid #e9dcf8;
+      border-radius: 10px;
+      padding: 12px;
+      background: #fcf9ff;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .card h3 {
+      margin: 0 0 6px;
+      color: #2f234b;
+    }
+    ul {
+      padding-left: 20px;
+    }
+  </style>
+  <style>
+        body { margin: 0; overflow: hidden; font-family: 'Inter', sans-serif; }
+        .btn-back { position: fixed; top: 20px; left: 20px; padding: 10px 20px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; z-index: 10; }
+        #info { position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.7); color: white; padding: 15px; border-radius: 8px; }
+        input { width: 100px; }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="btn-back">← REGRESAR</a>
+  <header>
+    <h1>Ejercicio 2 - Introducción a SciPy</h1>
+    <p>Presentación del notebook y de los resultados obtenidos con análisis estadístico.</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Archivo del notebook</h2>
+      <p>Este ejercicio se basa en el archivo:</p>
+      <div class="links">
+        <a href="ejercicio_2_SCIPY.ipynb">Abrir notebook</a>
+        <a href="ejercicio_2_SCIPY.py">Ver versión en Python</a>
+      </div>
+      <pre><code># LIBRERÍA: SciPy
+from scipy import stats
+import numpy as np
+
+grupo_A = [14, 15, 13, 16, 17]
+grupo_B = [10, 11, 12, 10, 13]
+
+media_A = np.mean(grupo_A)
+media_B = np.mean(grupo_B)
+print(f"Promedio Grupo A: {media_A}")
+print(f"Promedio Grupo B: {media_B}")
+
+resumen = stats.describe(grupo_A)
+print(f"Resumen Grupo A: {resumen}")
+
+stat, p = stats.shapiro(grupo_A)
+print(f"Shapiro-Wilk Grupo A: p = {p:.4f}")
+
+t, p_valor = stats.ttest_ind(grupo_A, grupo_B)
+print(f"Prueba T: t = {t:.4f}, p = {p_valor:.4f}")
+
+horas = [2, 3, 5, 1, 6]
+notas = [10, 11, 13, 10, 16]
+r, p = stats.pearsonr(horas, notas)
+print(f"Correlación Pearson: r = {r:.4f}")</code></pre>
+    </section>
+
+    <section>
+      <h2>Resultados visuales</h2>
+      <div class="gallery">
+        <div class="card">
+          <img src="assets/images/ejercicio2_promedios.png" alt="Promedio de notas por grupo" />
+          <h3>Promedios por grupo</h3>
+          <p>Comparación de las medias entre el grupo A y el grupo B.</p>
+        </div>
+        <div class="card">
+          <img src="assets/images/ejercicio2_correlacion.png" alt="Correlación entre horas y notas" />
+          <h3>Correlación</h3>
+          <p>Relación entre horas de estudio y notas obtenidas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Qué se trabajó</h2>
+      <ul>
+        <li>Uso de SciPy para análisis estadístico.</li>
+        <li>Cálculo de medias, resumen descriptivo y pruebas estadísticas.</li>
+        <li>Aplicación de Shapiro-Wilk, prueba T y correlación de Pearson.</li>
+        <li>Visualización de resultados con NumPy y Matplotlib.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
